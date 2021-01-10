@@ -1,0 +1,18 @@
+.mainFooter {
+
+    min-height: 200px;
+    padding: 50px 0 50px 0;
+    transition: background-color ease-out .30s;
+}
+
+.mainRow {
+
+    margin-bottom: 20px;
+}
+
+.textDescription {
+
+    color: 'black';
+    font-size: 14px;
+    font-weight: 500;
+}

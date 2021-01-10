@@ -1,0 +1,32 @@
+.cart{
+    padding: 40px;
+    margin-top: 30px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+
+}
+.products{
+    width: 100%;
+    height: 200px;
+    flex-direction: column;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.h1{
+    font-size: 40px;
+    font-weight: 300;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+.button{
+    margin-top: 20px;
+}
+.order{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 600px;
+}
