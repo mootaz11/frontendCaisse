@@ -35,7 +35,7 @@ You will also see any lint errors in the console.
 
 # Structure 
 src folder : contains components of our application,context folder and common folder.every component is situated in a folder with a css module </br>
-package.json : contains metadata of the project like npm packages installed and project description. </br>
+package.json : contains dependencies and metadata  of the project like npm packages installed and project description. </br>
 package-lock.json : indicate modifications made to package.json. </br>
 .gitignore : specifies intentionally untracked files that Git should ignore like env variables and node_modules due to the huge capacity of this folder . </br>
 README.md : contains information about project files and composition. </br>
