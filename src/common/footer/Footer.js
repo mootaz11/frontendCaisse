@@ -32,7 +32,7 @@ export default function Footer() {
                                 <img src={InstagramImg} height="50px" alt="" style={{ cursor: 'pointer' }} />
                             </Col>
                             <Col style={{ padding: '0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <img src={FacebookImg} height="60px" alt="" style={{ cursor: 'pointer' }} />
+                                <img src={FacebookImg}  height="60px" alt="" style={{ cursor: 'pointer' }} />
                             </Col>
                             <Col style={{ padding: '0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <img src={YoutubeImg} height="50px" alt="" style={{ cursor: 'pointer' }} />

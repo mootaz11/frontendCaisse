@@ -5,8 +5,10 @@ import Header from './common/header/Header';
 import Products from './products/Products';
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import Commandes from './commandes/Commandes';
+import AppContext from './context/appContext';
 function App() {
   return (
+    <AppContext>
       <BrowserRouter>
         <Header />
         <Switch >
@@ -18,6 +20,8 @@ function App() {
         </Switch>
         <Footer />
       </BrowserRouter>
+    </AppContext>
+
   );
 }
 

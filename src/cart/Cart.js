@@ -1,4 +1,5 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useContext} from 'react';
+import {useHistory} from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,20 +12,23 @@ import classes from '../cart/cart.module.css';
 import cart from '../assets/img/sprite.png'
 import { Button } from 'reactstrap';
 import custom_axios from '../customAxios';
-import toastr from 'reactjs-toastr';
-import 'reactjs-toastr/lib/toast.css';
-
-
+import globalContext from '../context/globalContext';
+import {toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+toast.configure()
 const TAX_RATE = 0.07;
 const useStyles = makeStyles({
   table: {
     minWidth: 700,
   },
 });
+const media_root="http://localhost:8000"
 
 export default function Cart() {
   const tableClasses = useStyles();
   const [order,setOrder]=useState(null)
+  const history = useHistory();
+  const context = useContext(globalContext)
 
 
 
@@ -48,8 +52,13 @@ const passOrder=()=>{
   if(localStorage.getItem("panier")){
     custom_axios.post(`/order/pass/${localStorage.getItem("panier")}/`,{}).then(res=>{
       if(res.status===200){
-        //toastr.success('Order Passed', 'passing order', {displayDuration:3000})
-        alert("done")
+        localStorage.removeItem("panier");
+        toast.success("Order passed !",{position:toast.POSITION.BOTTOM_LEFT})
+
+        window.open(media_root+res.data.pdf)
+
+        context.setNotif(0)
+        history.push('/home')
       }
     })
   }
@@ -94,7 +103,7 @@ const passOrder=()=>{
         </TableBody>
       </Table>
     </TableContainer>
-    <Button onClick={()=>{passOrder()}} className={classes.button} color="primary">passer la commande</Button>{' '}
+    <Button active={localStorage.getItem("panier")} onClick={()=>{passOrder()}} className={classes.button} color="primary">passer la commande</Button>{' '}
 
     </div>
    

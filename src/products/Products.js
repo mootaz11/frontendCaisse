@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React,{useContext, useEffect,useHistory} from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, Row, Col, CardText, CardTitle, CardSubtitle, Button, CardImg, CardBody, Card, Modal, Label } from 'reactstrap'
 import classes from './products.module.css';
@@ -7,12 +7,11 @@ import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import Tooltip from '@material-ui/core/Tooltip';
 import {Input} from '@material-ui/core';
-import toastr from 'reactjs-toastr';
-import 'reactjs-toastr/lib/toast.css';
-
-import custom_axios from '../customAxios'
-
-
+import custom_axios from '../customAxios';
+import globalContext from '../context/globalContext'
+import {toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+toast.configure()
 const media_root="http://localhost:8000"
 const useStyles = makeStyles((theme) => ({
     fab: {
@@ -33,12 +32,14 @@ export default function Products() {
     const [products,setProducts]=React.useState([])
     const [offre,setOffreChecked]=React.useState(false);
     const [remise,setRemise]=React.useState(false);
-    const [product,setProduct]=React.useState({name:"",price:0,quantity:1,remise:false,offre:false})
+    const [product,setProduct]=React.useState({name:"",price:0,quantity:1,discount:false,offre:false})
     const [imageProduct,setImageProduct]=React.useState();
     const FabClasses = useStyles();
+    const context = useContext(globalContext)
     const handleClose = () => { }
 
     useEffect(()=>{
+
         custom_axios.get('/product/getAll/').then(res=>{
             if(res.status===200){
             setProducts(res.data)
@@ -47,10 +48,18 @@ export default function Products() {
     },[])    
 
     const addToCart=(product)=>{
-            if(!localStorage.getItem('panier')){
+        if(product.stock>0){
+        if(product.discount){
+                product.price=product.price*0.5
+        }
+        
+        if(!localStorage.getItem('panier')){
                 custom_axios.post('/order/create/',{'product':product,quantity:1}).then(res=>{
                     if(res.status===201){
                         localStorage.setItem('panier',res.data.id)
+                        toast.success("Order created !",{position:toast.POSITION.BOTTOM_LEFT})
+
+                        context.setNotif(1)
                     }
                 })
             }
@@ -58,25 +67,33 @@ export default function Products() {
 
                 custom_axios.patch(`/order/update/${localStorage.getItem('panier')}/`,{'product':product,quantity:1}).then(res=>{
                     if(res.status===200){
-                toastr.success('Order Passed', 'passing order', {displayDuration:3000})
+                        toast.success("Order updated !",{position:toast.POSITION.BOTTOM_LEFT})
+
     }
                 })
             }
-    }
+        }
+        else {
+            toast.warn("no enough stock !",{position:toast.POSITION.BOTTOM_LEFT})
+
+        }
+        }
 
     const addProductHandler=()=>{
         if(product.name!=="" && product.price>0&&imageProduct){
         const fd = new FormData()
-        fd.append('image', imageProduct)
+        fd.append('image', imageProduct);
         fd.append('name',product.name);
         fd.append('stock',product.quantity);
         fd.append('price',product.price);
-        fd.append('remise',product.discount);
+        fd.append('discount',product.discount);
         fd.append('offer',product.offre);
             custom_axios.post('/product/create/',fd).then(res=>{
                 if(res.status===201){
                     setProducts([...products,res.data])
                     setOpen(!open)
+                    toast.success("new product has been added to stock !",{position:toast.POSITION.BOTTOM_LEFT})
+
                 }
             }).catch(err=>{
                 alert("error occured")
@@ -135,7 +152,7 @@ export default function Products() {
                             <Label style={{ fontSize: 22 }}>Remise 50%</Label>
                             <Checkbox
                                 checked={remise}
-                                onChange={() => { setRemise(!remise); setProduct({...product,remise:!remise}) }}
+                                onChange={() => { setRemise(!remise); setProduct({...product,discount:!remise}) }}
                                 inputProps={{ 'aria-label': 'primary checkbox' }}
                             />
                             <Label style={{ fontSize: 22 }} >offre</Label>

@@ -1,5 +1,6 @@
-import React from 'react'
+import React,{useContext} from 'react'
 import Carrefour from '../../assets/img/logo.jpg';
+import globalContext from '../../context/globalContext'
 import {
     NavbarBrand,
     Navbar,
@@ -12,6 +13,7 @@ import {  NavLink } from 'react-router-dom'
 
 
 export default function Header() {
+	const context = useContext(globalContext)
 	return (
 		<div style={{ marginBottom: '60px' }} >
 		 
@@ -39,7 +41,7 @@ export default function Header() {
 								style={{ color :'black', textDecoration: 'none' }}>
 								<i className={`fas fa-shopping-cart ${classes.navMainIconsLight}`} style={{ padding: '0px 1.5px 0px 1.5px' }}></i>
 								<div className={classes.numberMessagesContainer}>
-									<p className={classes.numberNotifText}>{"12"}</p>
+									<p className={classes.numberNotifText}>{context.notif?context.notif:"0"}</p>
 								</div>
 							</NavLink>
 						</NavItem>	
