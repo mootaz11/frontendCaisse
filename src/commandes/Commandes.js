@@ -32,7 +32,7 @@ export default function Commandes() {
     const tableClasse = useStyles();
     const [historique,setHistorique]=useState([]);
     useEffect(()=>{
-      custom_axios.get('/order/getHistorical/').then(res=>{
+      custom_axios.get('/order/passed/').then(res=>{
         if(res.status===200){
           console.log(res.data)
           setHistorique(res.data);
