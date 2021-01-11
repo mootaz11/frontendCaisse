@@ -23,23 +23,23 @@
     "styled-components": "^5.2.1",
     "web-vitals": "^0.2.4"
  # Installation 
- git clone https://github.com/mootaz11/frontendCaisse.git
- cd frontendCaisse
- npm install
- npm start : 
- Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+ git clone https://github.com/mootaz11/frontendCaisse.git </br>
+ cd frontendCaisse </br>
+ npm install </br> 
+ npm start :  </br>
+ Runs the app in the development mode.\ </br> 
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser. </br> 
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
 # Structure 
-src folder : contains components of our application,context folder and common folder.every component is situated in a folder with a css module
-package.json : contains metadata of the project like npm packages installed and project description.
-package-lock.json : indicate modifications made to package.json.
-.gitignore : specifies intentionally untracked files that Git should ignore like env variables and node_modules due to the huge capacity of this folder .
-README.md : contains information about project files and composition.
+src folder : contains components of our application,context folder and common folder.every component is situated in a folder with a css module </br>
+package.json : contains metadata of the project like npm packages installed and project description. </br>
+package-lock.json : indicate modifications made to package.json. </br>
+.gitignore : specifies intentionally untracked files that Git should ignore like env variables and node_modules due to the huge capacity of this folder . </br>
+README.md : contains information about project files and composition. </br>
 
 # Contact: 
- linkedin: https://www.linkedin.com/in/mootaz-amara-b4aab6162/
- email: amaramootaz11@gmail.com
+ linkedin: https://www.linkedin.com/in/mootaz-amara-b4aab6162/ </br>
+ email: amaramootaz11@gmail.com </br>
