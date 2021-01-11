@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,16 +9,14 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import {Row,Col,Container,Button} from 'reactstrap';
 import classes from './commandes.module.css';
-
+import custom_axios from '../customAxios'
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
   },
 });
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+
 
 const orders = [
   {id:122,totale:555, date:"08/01/2021",ticket:"ticket1"},
@@ -26,17 +24,33 @@ const orders = [
   {id:124,totale:555, date:"08/01/2021",ticket:"ticket1"},
   {id:125,totale:555, date:"08/01/2021",ticket:"ticket1"},
   {id:126,totale:555, date:"08/01/2021",ticket:"ticket1"},
-
 ];
+
+const media_root="http://localhost:8000/media"
 
 export default function Commandes() {
     const tableClasse = useStyles();
-  return (
+    const [historique,setHistorique]=useState([]);
+    useEffect(()=>{
+      custom_axios.get('/order/getHistorical/').then(res=>{
+        if(res.status===200){
+          console.log(res.data)
+          setHistorique(res.data);
+        }
+      }).catch(err=>{
+        alert("error occured")
+      })
+    },[])
+const openTicket=(ticket)=>{
+  console.log(ticket)
+  window.open(media_root+"/"+ticket)
+}    
+    return (
     <Container fluid className={classes.mainContainer}>
 
     <Row>
         <Col md="12" lg="12" className={classes.headerContainer}>
-            <text className={classes.headerTitle}>Commandes</text>
+            <text className={classes.headerTitle}>historique</text>
         </Col>
     </Row>
     <TableContainer component={Paper}>
@@ -51,16 +65,16 @@ export default function Commandes() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {orders.map((order) => (
-            <TableRow key={order.id}>
+          {historique.map((passedOrder) => (
+            <TableRow key={passedOrder.order.id}>
               <TableCell component="th" scope="row">
-                {order.id}
+                {passedOrder.order.id}
               </TableCell>
-              <TableCell align="right">{order.totale} €</TableCell>
-              <TableCell align="right">{order.date}</TableCell>
-              <TableCell align="right">{order.ticket}</TableCell>
+              <TableCell align="right">{passedOrder.order.total} €</TableCell>
+              <TableCell align="right">{passedOrder.order.date.split('T')[0]}</TableCell>
+              <TableCell align="right">{passedOrder.order.id}</TableCell>
               <TableCell align="right">
-                  <Button color="primary">ouvrir ticket</Button>
+                  <Button onClick={()=>{openTicket(passedOrder.Ticket)}} color="primary">ouvrir ticket</Button>
               </TableCell>
             </TableRow>
           ))}

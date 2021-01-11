@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -10,6 +10,11 @@ import Paper from '@material-ui/core/Paper';
 import classes from '../cart/cart.module.css';
 import cart from '../assets/img/sprite.png'
 import { Button } from 'reactstrap';
+import custom_axios from '../customAxios';
+import toastr from 'reactjs-toastr';
+import 'reactjs-toastr/lib/toast.css';
+
+
 const TAX_RATE = 0.07;
 const useStyles = makeStyles({
   table: {
@@ -17,35 +22,38 @@ const useStyles = makeStyles({
   },
 });
 
-function ccyFormat(num) {
-  return `${num.toFixed(2)}`;
-}
-
-function priceRow(qty, unit) {
-  return qty * unit;
-}
-
-function createRow(desc, qty, unit) {
-  const price = priceRow(qty, unit);
-  return { desc, qty, unit, price };
-}
-
-function subtotal(items) {
-  return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0);
-}
-
-const rows = [
-  createRow('Paperclips (Box)', 100, 1.15),
-  createRow('Paper (Case)', 10, 45.99),
-  createRow('Waste Basket', 2, 17.99),
-];
-
-const invoiceSubtotal = subtotal(rows);
-const invoiceTaxes = TAX_RATE * invoiceSubtotal;
-const invoiceTotal = invoiceTaxes + invoiceSubtotal;
-
-export default function SpanningTable() {
+export default function Cart() {
   const tableClasses = useStyles();
+  const [order,setOrder]=useState(null)
+
+
+
+
+  useEffect(()=>{
+
+    if(localStorage.getItem("panier")){
+    custom_axios.get(`/order/${localStorage.getItem("panier")}/`).then(res=>{
+      if(res.status===200){
+        console.log(res.data)
+        setOrder(res.data)
+      }
+    })
+    .catch(err=>{
+      alert("error occured");
+    })
+  }
+    },[])
+
+const passOrder=()=>{
+  if(localStorage.getItem("panier")){
+    custom_axios.post(`/order/pass/${localStorage.getItem("panier")}/`,{}).then(res=>{
+      if(res.status===200){
+        //toastr.success('Order Passed', 'passing order', {displayDuration:3000})
+        alert("done")
+      }
+    })
+  }
+}
 
   return (
       <div className={classes.cart}>
@@ -67,37 +75,26 @@ export default function SpanningTable() {
             <TableCell>Desc</TableCell>
             <TableCell align="right">Qty.</TableCell>
             <TableCell align="right">Unit</TableCell>
-            <TableCell align="right">Sum</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.desc}>
-              <TableCell>{row.desc}</TableCell>
-              <TableCell align="right">{row.qty}</TableCell>
-              <TableCell align="right">{row.unit}</TableCell>
-              <TableCell align="right">{ccyFormat(row.price)}</TableCell>
+          {order&&order.products.map((value) => (
+            <TableRow key={value.product.id}>
+              <TableCell>{value.product.name}</TableCell>
+              <TableCell align="right">{value.orderProduct.quantity}</TableCell>
+              <TableCell align="right">{value.product.price} €</TableCell>
             </TableRow>
           ))}
 
-          <TableRow>
-            <TableCell rowSpan={3} />
-            <TableCell colSpan={2}>Subtotal</TableCell>
-            <TableCell align="right">{ccyFormat(invoiceSubtotal)}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Tax</TableCell>
-            <TableCell align="right">{`${(TAX_RATE * 100).toFixed(0)} %`}</TableCell>
-            <TableCell align="right">{ccyFormat(invoiceTaxes)}</TableCell>
-          </TableRow>
+    
           <TableRow>
             <TableCell colSpan={2}>Total</TableCell>
-            <TableCell align="right">{ccyFormat(invoiceTotal)}</TableCell>
+            <TableCell align="right">{order&&order.order.total }€</TableCell>
           </TableRow>
         </TableBody>
       </Table>
     </TableContainer>
-    <Button className={classes.button} color="primary">passer la commande</Button>{' '}
+    <Button onClick={()=>{passOrder()}} className={classes.button} color="primary">passer la commande</Button>{' '}
 
     </div>
    

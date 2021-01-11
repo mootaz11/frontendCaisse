@@ -31,7 +31,7 @@ export default function Header() {
 						
 						<NavItem className={classes.navItem}>
 							<NavLink  to={'/orders'}  style={{ color :'black', textDecoration: 'none' ,marginRight:5}}>
-								<h4>commandes</h4>
+								<h4>historique</h4>
 							</NavLink>
 						</NavItem>	
 					 <NavItem className={classes.navItem}>
